@@ -1,15 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid');
     const doodler = document.createElement('div');
-    let doodlerLeftSpace = 50;
+   // let doodlerLeftSpace = 50;
     let startPoint = 150
-    let doodlerBottomSpace = 150;
+    let doodlerBottomSpace = startPoint;
     let isGameOver = false;
     let platformCount = 5;
     const platforms = [];
     let upTimerId;
     let downTimerId;
     let isJumping = true;
+    let movingLeft = false;
+    let movingRight = false;
 
     function createDoodler () {
         grid.appendChild(doodler);
@@ -59,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             doodlerBottomSpace += 20;
             doodler.style.bottom = doodlerBottomSpace + 'px';
             
-            if (doodlerBottomSpace > 350) {
+            if (doodlerBottomSpace > startPoint + 200) {
                 fall();
             }
         }, 30)
@@ -85,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     !isJumping
                 ) {
                     console.log('landed')
+                    startPoint = doodlerBottomSpace;
                     jump();
                 }
             })
@@ -93,10 +96,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function control (e) {
         if (e.key === 'a' || e.key === 'ArrowLeft') {
-            //moveLeft();
+            console.log(e.key)
+            moveLeft();
         }
         if (e.key === 'd' || e.key === 'ArrowRight') {
-            //moveRight();
+            moveRight();
+            console.log(e.key)
+        }
+    }
+
+    function moveLeft () {
+        movingLeft = true;
+        if (doodlerLeftSpace >= 0) {
+            doodlerLeftSpace -= 5;
+            doodler.style.left = doodlerLeftSpace + 'px';
+        } 
+        if (doodlerLeftSpace < 0) {
+            moveRight();
+        }  
+    }
+
+    function moveRight () {
+        movingRight = true;
+        if (doodlerLeftSpace <= 340) {
+            doodlerLeftSpace += 5;
+            doodler.style.left = doodlerLeftSpace + 'px';
         }
     }
 
@@ -104,13 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = true;
         clearInterval(downTimerId);
     }
-
+    
     function start () {
         if (!isGameOver) {
             createPlatforms();
             createDoodler();
             setInterval(movePlatforms, 30);
             jump();
+            document.addEventListener('keydown', control);
         }
     }
     start();
