@@ -107,13 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function moveLeft () {
         movingLeft = true;
-        if (doodlerLeftSpace >= 0) {
+        if (doodlerLeftSpace > 0) {
             doodlerLeftSpace -= 5;
             doodler.style.left = doodlerLeftSpace + 'px';
+            return;
         } 
-        if (doodlerLeftSpace < 0) {
-            moveRight();
-        }  
+         moveRight() 
     }
 
     function moveRight () {
